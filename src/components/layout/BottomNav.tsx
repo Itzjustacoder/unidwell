@@ -14,6 +14,9 @@ const tabs = [
 export default function BottomNav() {
   const pathname = usePathname()
 
+  // Hide nav inside individual chat conversations
+  if (/^\/chat\/.+/.test(pathname)) return null
+
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-100 nav-safe-bottom">
       <div className="flex items-stretch max-w-lg mx-auto">

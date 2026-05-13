@@ -20,6 +20,7 @@ export default function ChatListPage() {
 
   useEffect(() => {
     async function load() {
+      setLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
@@ -57,6 +58,9 @@ export default function ChatListPage() {
       setLoading(false)
     }
     load()
+    const onVisible = () => { if (document.visibilityState === 'visible') load() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
   }, [])
 
   return (

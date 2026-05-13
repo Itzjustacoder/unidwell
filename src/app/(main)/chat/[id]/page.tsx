@@ -109,7 +109,8 @@ export default function ChatPage() {
   const avatar = other ? (other.avatar_url ?? getAvatarUrl(other.name, other.id)) : ''
 
   return (
-    <div className="flex flex-col h-screen bg-brand-50 max-w-2xl mx-auto">
+    <div className="fixed inset-0 flex flex-col bg-brand-50">
+    <div className="flex flex-col h-full w-full max-w-2xl mx-auto">
       {/* Header */}
       <div className="bg-white border-b border-brand-50 px-4 pt-safe-top pb-3 flex-shrink-0 shadow-sm">
         <div className="flex items-center gap-3 mt-2">
@@ -218,6 +219,7 @@ export default function ChatPage() {
           </button>
         </form>
       </div>
+    </div>
     </div>
   )
 }
