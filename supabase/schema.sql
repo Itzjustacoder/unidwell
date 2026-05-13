@@ -1,5 +1,5 @@
 -- ============================================================
--- UniDwell Database Schema
+-- Roomie Match Database Schema
 -- ============================================================
 
 -- Enable UUID extension
@@ -203,6 +203,21 @@ CREATE POLICY "messages_insert_own" ON public.messages FOR INSERT
       SELECT 1 FROM public.matches m
       WHERE m.id = match_id
         AND m.status = 'accepted'
+        AND (m.requester_id = auth.uid() OR m.receiver_id = auth.uid())
+    )
+  );
+CREATE POLICY "messages_update_read" ON public.messages FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.matches m
+      WHERE m.id = match_id
+        AND (m.requester_id = auth.uid() OR m.receiver_id = auth.uid())
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.matches m
+      WHERE m.id = match_id
         AND (m.requester_id = auth.uid() OR m.receiver_id = auth.uid())
     )
   );
