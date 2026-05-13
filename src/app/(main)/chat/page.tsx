@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { MessageCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -17,51 +17,61 @@ export default function ChatListPage() {
   const supabase = createClient()
   const [convos, setConvos] = useState<ConversationPreview[]>([])
   const [loading, setLoading] = useState(true)
+  const isFirstLoad = useRef(true)
+
+  const load = useCallback(async () => {
+    if (isFirstLoad.current) setLoading(true)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const { data: matches } = await supabase
+      .from('matches')
+      .select('*')
+      .eq('status', 'accepted')
+      .or(`requester_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      .order('updated_at', { ascending: false })
+
+    if (!matches) { setLoading(false); return }
+
+    const previews = await Promise.all(
+      matches.map(async (m) => {
+        const otherId = m.requester_id === user.id ? m.receiver_id : m.requester_id
+
+        const [{ data: other }, { data: msgs }, { count }] = await Promise.all([
+          supabase.from('profiles').select('*').eq('id', otherId).single(),
+          supabase.from('messages').select('*').eq('match_id', m.id)
+            .order('created_at', { ascending: false }).limit(1),
+          supabase.from('messages').select('*', { count: 'exact', head: true })
+            .eq('match_id', m.id).eq('is_read', false).neq('sender_id', user.id),
+        ])
+
+        return {
+          ...m,
+          other: other!,
+          lastMessage: msgs?.[0] ?? null,
+          unread: count ?? 0,
+        }
+      }),
+    )
+
+    setConvos(previews)
+    setLoading(false)
+    isFirstLoad.current = false
+  }, [])
 
   useEffect(() => {
-    async function load() {
-      setLoading(true)
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data: matches } = await supabase
-        .from('matches')
-        .select('*')
-        .eq('status', 'accepted')
-        .or(`requester_id.eq.${user.id},receiver_id.eq.${user.id}`)
-        .order('updated_at', { ascending: false })
-
-      if (!matches) { setLoading(false); return }
-
-      const previews = await Promise.all(
-        matches.map(async (m) => {
-          const otherId = m.requester_id === user.id ? m.receiver_id : m.requester_id
-
-          const [{ data: other }, { data: msgs }, { count }] = await Promise.all([
-            supabase.from('profiles').select('*').eq('id', otherId).single(),
-            supabase.from('messages').select('*').eq('match_id', m.id)
-              .order('created_at', { ascending: false }).limit(1),
-            supabase.from('messages').select('*', { count: 'exact', head: true })
-              .eq('match_id', m.id).eq('is_read', false).neq('sender_id', user.id),
-          ])
-
-          return {
-            ...m,
-            other: other!,
-            lastMessage: msgs?.[0] ?? null,
-            unread: count ?? 0,
-          }
-        }),
-      )
-
-      setConvos(previews)
-      setLoading(false)
-    }
     load()
-    const onVisible = () => { if (document.visibilityState === 'visible') load() }
-    document.addEventListener('visibilitychange', onVisible)
-    return () => document.removeEventListener('visibilitychange', onVisible)
-  }, [])
+
+    // Re-fetch whenever a message is inserted or marked as read
+    const channel = supabase
+      .channel('chat-list-messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => load())
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, () => load())
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [load])
 
   return (
     <div className="max-w-2xl mx-auto">
