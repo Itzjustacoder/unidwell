@@ -91,7 +91,7 @@ export default function ChatListPage() {
                 >
                   <div className="relative flex-shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={avatar} alt={c.other.name} className="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-100" onError={e => { if (!e.currentTarget.src.startsWith('data:')) e.currentTarget.src = getAvatarUrl(c.other.name, c.other.id) }} />
+                    <img src={avatar} alt={c.other.name} width={36} height={36} className="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-100" style={{ width: 36, height: 36, minWidth: 36, minHeight: 36 }} onError={e => { if (!e.currentTarget.src.startsWith('data:')) e.currentTarget.src = getAvatarUrl(c.other.name, c.other.id) }} />
                     {c.unread > 0 && (
                       <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
                         {c.unread}

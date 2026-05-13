@@ -165,7 +165,7 @@ function MatchCard({
     <div className="bg-white rounded-2xl p-4 shadow-card border border-brand-50 flex items-center gap-3">
       <Link href={`/profile/${other.id}`} className="flex-shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={avatar} alt={other.name} className="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-100" onError={e => { if (!e.currentTarget.src.startsWith('data:')) e.currentTarget.src = getAvatarUrl(other.name, other.id) }} />
+        <img src={avatar} alt={other.name} width={36} height={36} className="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-100" style={{ width: 36, height: 36, minWidth: 36, minHeight: 36 }} onError={e => { if (!e.currentTarget.src.startsWith('data:')) e.currentTarget.src = getAvatarUrl(other.name, other.id) }} />
       </Link>
 
       <div className="flex-1 min-w-0">
