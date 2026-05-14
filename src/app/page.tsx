@@ -52,28 +52,28 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO */}
-      <section className="relative pt-32 pb-20 px-4">
+      <section className="relative pt-32 pb-20 px-4 flex flex-col items-center">
         {/* Background blobs */}
         <div className="absolute top-0 -right-32 w-96 h-96 bg-brand-200 rounded-full blur-3xl opacity-40 pointer-events-none" />
         <div className="absolute top-20 -left-32 w-80 h-80 bg-indigo-200 rounded-full blur-3xl opacity-40 pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto text-center relative">
+        <div className="w-full max-w-4xl mx-auto text-center relative flex flex-col items-center">
           <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 border border-brand-200">
             <span className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse" />
             Student-only · Verified · Free to match
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 leading-tight mb-6">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 leading-tight mb-6 text-center w-full">
             Your ideal roommate{' '}
             <span className="gradient-text">goes here.</span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed text-center">
             Roomie Match matches verified students based on lifestyle, budget, and vibe.
             No landlords, no randoms — just real housemates who actually get you.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-14">
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mb-14 w-full">
             <Link href="/signup"
               className="inline-flex items-center justify-center gap-2 bg-gradient-brand text-white font-bold text-base px-8 py-4 rounded-2xl hover:opacity-90 hover:shadow-glow transition-all">
               Find my roommate
@@ -149,12 +149,12 @@ export default function LandingPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-slate-900 mb-12">
+      <section className="py-20 px-4 flex flex-col items-center">
+        <div className="w-full max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-12">
             Three steps to your new home
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-6 text-left max-w-lg mx-auto">
             {[
               { n: '01', title: 'Verify & set up your profile', desc: 'Sign up with your uni email. Fill in your lifestyle, interests, and budget in minutes.' },
               { n: '02', title: 'Explore your matches', desc: 'Browse students with a real compatibility score. Filter by uni, budget, and lifestyle.' },
