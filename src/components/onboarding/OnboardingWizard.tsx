@@ -9,8 +9,9 @@ import Step1BasicInfo from './Step1BasicInfo'
 import Step2Lifestyle from './Step2Lifestyle'
 import Step3Interests from './Step3Interests'
 import Step4Requirements from './Step4Requirements'
+import Step5Origin from './Step5Origin'
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 5
 
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -23,13 +24,14 @@ const defaultData: OnboardingData = {
   step2: {
     sleep_schedule: 'flexible', cleanliness_level: 3, social_preference: 'balanced',
     smoking: 'non_smoker', guests_frequency: 'occasionally', noise_tolerance: 'moderate',
-    pet_friendly: false,
+    pet_friendly: false, deal_breaker: 'none',
   },
   step3: { tags: [] },
   step4: {
     budget_min: 500, budget_max: 1000, preferred_areas: [], group_size: 2,
     move_in_date: '', duration: 'flexible',
   },
+  step5: { country: '', languages: [], match_same_origin: false },
 }
 
 export default function OnboardingWizard({ userId }: { userId: string }) {
@@ -56,14 +58,16 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
   function updateStep4(vals: Partial<OnboardingData['step4']>) {
     setData(d => ({ ...d, step4: { ...d.step4, ...vals } }))
   }
+  function updateStep5(vals: Partial<OnboardingData['step5']>) {
+    setData(d => ({ ...d, step5: { ...d.step5, ...vals } }))
+  }
 
   async function handleFinish() {
     setSaving(true)
     setError('')
     try {
-      const { step1, step2, step3, step4 } = data
+      const { step1, step2, step3, step4, step5 } = data
 
-      // Update profile
       const { error: e1 } = await supabase
         .from('profiles')
         .update({
@@ -73,34 +77,34 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
           year_of_study:     parseInt(step1.year_of_study) || null,
           gender:            step1.gender || null,
           bio:               step1.bio,
+          country:           step5.country || null,
+          languages:         step5.languages,
+          match_same_origin: step5.match_same_origin,
           onboarding_complete: true,
         })
         .eq('id', userId)
       if (e1) throw e1
 
-      // Upsert lifestyle
       const { error: e2 } = await supabase
         .from('lifestyle_preferences')
         .upsert({ profile_id: userId, ...step2 })
       if (e2) throw e2
 
-      // Upsert interests
       const { error: e3 } = await supabase
         .from('user_interests')
         .upsert({ profile_id: userId, tags: step3.tags })
       if (e3) throw e3
 
-      // Upsert housing
       const { error: e4 } = await supabase
         .from('housing_requirements')
         .upsert({
-          profile_id:     userId,
-          budget_min:     step4.budget_min,
-          budget_max:     step4.budget_max,
+          profile_id:      userId,
+          budget_min:      step4.budget_min,
+          budget_max:      step4.budget_max,
           preferred_areas: step4.preferred_areas,
-          group_size:     step4.group_size,
-          move_in_date:   step4.move_in_date || null,
-          duration:       step4.duration,
+          group_size:      step4.group_size,
+          move_in_date:    step4.move_in_date || null,
+          duration:        step4.duration,
         })
       if (e4) throw e4
 
@@ -112,7 +116,7 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
     }
   }
 
-  const stepLabels = ['Basic Info', 'Lifestyle', 'Interests', 'Requirements']
+  const stepLabels = ['Basic Info', 'Lifestyle', 'Interests', 'Requirements', 'Origin']
 
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col">
@@ -124,7 +128,6 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
             <span className="text-sm text-slate-400 font-medium">Step {step} of {TOTAL_STEPS}</span>
           </div>
 
-          {/* Progress bar */}
           <div className="flex gap-1.5">
             {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
               <div
@@ -136,7 +139,6 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
             ))}
           </div>
 
-          {/* Step labels */}
           <div className="flex mt-2">
             {stepLabels.map((label, i) => (
               <div key={label} className={`flex-1 text-center text-[10px] font-semibold transition-colors ${
@@ -173,11 +175,14 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
                 <Step3Interests data={data.step3} onChange={updateStep3} onNext={next} onBack={back} />
               )}
               {step === 4 && (
-                <Step4Requirements
-                  data={data.step4}
-                  onChange={updateStep4}
+                <Step4Requirements data={data.step4} onChange={updateStep4} onNext={next} onBack={back} />
+              )}
+              {step === 5 && (
+                <Step5Origin
+                  data={data.step5}
+                  onChange={updateStep5}
+                  onNext={handleFinish}
                   onBack={back}
-                  onFinish={handleFinish}
                   saving={saving}
                   error={error}
                 />

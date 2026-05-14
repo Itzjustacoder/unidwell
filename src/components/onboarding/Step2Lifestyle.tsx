@@ -1,7 +1,7 @@
 'use client'
 
-import { Moon, Sun, Sparkles, Users, PersonStanding, Coffee, Volume2, VolumeX, Dog } from 'lucide-react'
-import type { OnboardingData } from '@/types'
+import { Moon, Sun, Sparkles, Users, PersonStanding, Volume2, VolumeX, Dog, AlertTriangle } from 'lucide-react'
+import type { OnboardingData, DealBreaker } from '@/types'
 
 interface Props {
   data: OnboardingData['step2']
@@ -168,6 +168,43 @@ export default function Step2Lifestyle({ data, onChange, onNext, onBack }: Props
               data.pet_friendly ? 'left-6' : 'left-0.5'
             }`} />
           </button>
+        </div>
+
+        {/* Deal breaker */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle size={14} className="text-rose-400" />
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              My One Deal Breaker
+            </label>
+          </div>
+          <p className="text-xs text-slate-400 mb-3">This will be shown on your profile. We won't match you with anyone who conflicts with it.</p>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { value: 'none',        label: 'No deal breaker', emoji: '✌️' },
+              { value: 'noise',       label: 'Must be quiet',   emoji: '🤫' },
+              { value: 'smoking',     label: 'No smoking',      emoji: '🚭' },
+              { value: 'guests',      label: 'No frequent guests', emoji: '🚪' },
+              { value: 'pets',        label: 'No pets',         emoji: '🐾' },
+              { value: 'cleanliness', label: 'Must be clean',   emoji: '🧹' },
+              { value: 'early_riser', label: 'Early riser household', emoji: '🌅' },
+              { value: 'night_owl',   label: 'Night owl household',   emoji: '🦉' },
+            ] as { value: DealBreaker; label: string; emoji: string }[]).map(o => (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => onChange({ deal_breaker: o.value })}
+                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-xs font-semibold transition-all text-left ${
+                  data.deal_breaker === o.value
+                    ? 'border-rose-400 bg-rose-50 text-rose-700'
+                    : 'border-slate-100 bg-white text-slate-500 hover:border-rose-200'
+                }`}
+              >
+                <span>{o.emoji}</span>
+                {o.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

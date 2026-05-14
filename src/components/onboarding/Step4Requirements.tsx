@@ -1,15 +1,12 @@
 'use client'
 
-import { AlertCircle, Loader2 } from 'lucide-react'
 import type { OnboardingData, HousingDuration } from '@/types'
 
 interface Props {
   data: OnboardingData['step4']
   onChange: (vals: Partial<OnboardingData['step4']>) => void
   onBack: () => void
-  onFinish: () => void
-  saving: boolean
-  error: string
+  onNext: () => void
 }
 
 const LONDON_AREAS = [
@@ -25,7 +22,7 @@ const DURATIONS: { value: HousingDuration; label: string; desc: string }[] = [
   { value: 'flexible',      label: 'Flexible',      desc: 'Open to anything' },
 ]
 
-export default function Step4Requirements({ data, onChange, onBack, onFinish, saving, error }: Props) {
+export default function Step4Requirements({ data, onChange, onBack, onNext }: Props) {
   function toggleArea(area: string) {
     const has = data.preferred_areas.includes(area)
     onChange({ preferred_areas: has ? data.preferred_areas.filter(a => a !== area) : [...data.preferred_areas, area] })
@@ -175,34 +172,18 @@ export default function Step4Requirements({ data, onChange, onBack, onFinish, sa
         </div>
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 text-rose-600 bg-rose-50 rounded-xl p-3 text-sm my-3">
-          <AlertCircle size={16} className="flex-shrink-0" />
-          {error}
-        </div>
-      )}
-
       <div className="flex gap-3 mt-4">
         <button
           onClick={onBack}
-          disabled={saving}
-          className="flex-1 py-3.5 rounded-2xl border-2 border-slate-200 text-slate-600 font-bold hover:border-brand-300 transition-colors disabled:opacity-40"
+          className="flex-1 py-3.5 rounded-2xl border-2 border-slate-200 text-slate-600 font-bold hover:border-brand-300 transition-colors"
         >
           ← Back
         </button>
         <button
-          onClick={onFinish}
-          disabled={saving}
-          className="flex-[2] bg-gradient-brand text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+          onClick={onNext}
+          className="flex-[2] bg-gradient-brand text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity"
         >
-          {saving ? (
-            <>
-              <Loader2 size={18} className="animate-spin" />
-              Saving…
-            </>
-          ) : (
-            '🎉 Find my roommate!'
-          )}
+          Continue →
         </button>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Send, Info } from 'lucide-react'
+import { ArrowLeft, Send, Info, Home } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getAvatarUrl } from '@/lib/utils'
 import type { Message, Profile } from '@/types'
@@ -135,10 +135,17 @@ export default function ChatPage() {
           )}
 
           {other && (
-            <Link href={`/profile/${other.id}`}
-              className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-slate-500 hover:bg-brand-100 transition-colors flex-shrink-0">
-              <Info size={18} />
-            </Link>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Link href={`/flats/${matchId}`}
+                className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600 hover:bg-brand-100 transition-colors"
+                title="Browse flats together">
+                <Home size={18} />
+              </Link>
+              <Link href={`/profile/${other.id}`}
+                className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-slate-500 hover:bg-brand-100 transition-colors">
+                <Info size={18} />
+              </Link>
+            </div>
           )}
         </div>
       </div>
