@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle } from 'lucide-react'
+import { Eye, EyeOff, GraduationCap, AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { isStudentEmail } from '@/lib/utils'
 
@@ -14,7 +14,6 @@ export default function SignupPage() {
   const [form, setForm] = useState({ email: '', password: '', confirmPassword: '' })
   const [showPwd, setShowPwd] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const emailValid = form.email.length > 3 && isStudentEmail(form.email)
@@ -30,37 +29,28 @@ export default function SignupPage() {
     if (!pwdMatch)   return setError('Passwords do not match')
 
     setLoading(true)
+
     const { error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding` },
+    })
+
+    if (signUpError) {
+      setLoading(false)
+      return setError(signUpError.message)
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
     })
 
     setLoading(false)
-    if (signUpError) {
-      setError(signUpError.message)
-    } else {
-      setSuccess(true)
+    if (signInError) {
+      return setError(signInError.message)
     }
-  }
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-brand-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-card-lg">
-          <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={32} className="text-emerald-500" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">Check your inbox!</h2>
-          <p className="text-slate-500 text-sm mb-6">
-            We sent a confirmation link to <strong className="text-slate-700">{form.email}</strong>. Click it to activate your account.
-          </p>
-          <Link href="/login" className="text-sm font-semibold text-brand-600 hover:underline">
-            Back to sign in
-          </Link>
-        </div>
-      </div>
-    )
+    router.push('/onboarding')
   }
 
   return (
