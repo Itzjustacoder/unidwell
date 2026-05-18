@@ -124,7 +124,7 @@ export default function OnboardingWizard({ userId }: { userId: string }) {
       <div className="bg-white border-b border-brand-100 px-4 pt-safe-top">
         <div className="max-w-lg mx-auto py-4">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-lg font-extrabold gradient-text">Roomie Match</span>
+            <span className="text-lg font-extrabold gradient-text">Roomeet</span>
             <span className="text-sm text-slate-400 font-medium">Step {step} of {TOTAL_STEPS}</span>
           </div>
 

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Roomie Match — Find Your Perfect Student Roommate',
+  title: 'Roomeet — Find Your Perfect Student Roommate',
   description: 'Student-only roommate matching. Verified university students, real compatibility scores, zero awkwardness.',
   keywords: ['student housing', 'roommate matching', 'university accommodation'],
 }

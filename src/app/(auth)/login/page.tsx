@@ -29,7 +29,7 @@ export default function LoginPage() {
     if (loginError) {
       setError(
         loginError.message === 'Email not confirmed'
-          ? 'Please confirm your email first — check your inbox for a link from Roomie Match.'
+          ? 'Please confirm your email first — check your inbox for a link from Roomeet.'
           : loginError.message
       )
     } else {
@@ -40,7 +40,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col items-center justify-center p-4">
       <Link href="/" className="text-2xl font-extrabold gradient-text mb-8">
-        Roomie Match
+        Roomeet
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-card-lg p-8">

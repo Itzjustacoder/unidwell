@@ -27,7 +27,7 @@ const features = [
 const testimonials = [
   { name: 'Amara O.', uni: 'UCL', text: 'Found my two flatmates in a week. Best app I\'ve used for this.', score: 94 },
   { name: 'Jake R.', uni: 'Edinburgh', text: 'The lifestyle filters are chef\'s kiss. Zero awkward mismatches.', score: 88 },
-  { name: 'Sofia T.', uni: 'Bristol', text: 'I was dreading house hunting. Roomie Match made it actually fun.', score: 91 },
+  { name: 'Sofia T.', uni: 'Bristol', text: 'I was dreading house hunting. Roomeet made it actually fun.', score: 91 },
 ]
 
 export default function LandingPage() {
@@ -37,7 +37,7 @@ export default function LandingPage() {
       {/* NAV */}
       <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-md border-b border-brand-100">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold gradient-text">Roomie Match</span>
+          <span className="text-xl font-bold gradient-text">Roomeet</span>
           <div className="flex items-center gap-3">
             <Link href="/login"
               className="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors px-3 py-1.5">
@@ -69,7 +69,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed text-center">
-            Roomie Match matches verified students based on lifestyle, budget, and vibe.
+            Roomeet matches verified students based on lifestyle, budget, and vibe.
             No landlords, no randoms — just real housemates who actually get you.
           </p>
 
@@ -212,7 +212,7 @@ export default function LandingPage() {
               Ready to find your people?
             </h2>
             <p className="text-brand-200 mb-8">
-              Join thousands of students already matching on Roomie Match.
+              Join thousands of students already matching on Roomeet.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/signup"
@@ -235,7 +235,7 @@ export default function LandingPage() {
 
       <footer className="py-8 px-4 border-t border-slate-100 text-center">
         <p className="text-sm text-slate-400">
-          © 2025 Roomie Match · Student-only roommate matching
+          © 2025 Roomeet · Student-only roommate matching
         </p>
       </footer>
     </main>

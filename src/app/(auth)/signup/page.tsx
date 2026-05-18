@@ -57,7 +57,7 @@ export default function SignupPage() {
     <div className="min-h-screen bg-brand-50 flex flex-col items-center justify-center p-4">
       {/* Logo */}
       <Link href="/" className="text-2xl font-extrabold gradient-text mb-8">
-        Roomie Match
+        Roomeet
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-card-lg p-8">
